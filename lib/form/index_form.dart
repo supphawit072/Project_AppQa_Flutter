@@ -1,54 +1,56 @@
 import 'package:flutter/material.dart';
-import 'package:test/models/user_model.dart';
-import 'package:test/controllers/user_controller.dart';
+// import 'package:test/controllers/form_controller.dart';
+import 'package:test/controllers/form_controllers.dart';
+import 'package:test/models/form_midel.dart';
+// import 'package:test/models/form_model.dart'; // Adjust import based on your file structure
 
-class Indexuser extends StatefulWidget {
-  const Indexuser({super.key});
+class IndexForm extends StatefulWidget {
+  const IndexForm({super.key});
 
   @override
-  State<Indexuser> createState() => _IndexuserState();
+  State<IndexForm> createState() => _IndexFormState();
 }
 
-class _IndexuserState extends State<Indexuser> {
-  final UserController _userController = UserController();
+class _IndexFormState extends State<IndexForm> {
+  final FormController _formController = FormController();
   final TextEditingController _searchController = TextEditingController();
-  UserModel? _searchedUser;
+  FormModel? _searchedForm;
 
-  Future<void> _searchUser(BuildContext context) async {
+  Future<void> _searchForm(BuildContext context) async {
     try {
-      final user =
-          await _userController.getUser(context, _searchController.text);
+      final form =
+          await _formController.getForm(context, _searchController.text);
       setState(() {
-        _searchedUser = user;
+        _searchedForm = form;
       });
     } catch (e) {
       print(e);
       setState(() {
-        _searchedUser = null;
+        _searchedForm = null;
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('เกิดข้อผิดพลาด: $e')),
+        SnackBar(content: Text('Error: $e')),
       );
     }
   }
 
-  Future<void> _deleteUser(BuildContext context, String userId) async {
+  Future<void> _deleteForm(BuildContext context, String formId) async {
     try {
-      await _userController.deleteUser(context, userId);
+      await _formController.deleteForm(context, formId);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('ลบผู้ใช้เรียบร้อยแล้ว')),
+        SnackBar(content: Text('Form deleted successfully')),
       );
-      _searchUser(context);
+      _searchForm(context); // Refresh the list after deletion
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('เกิดข้อผิดพลาดในการลบผู้ใช้: $e')),
+        SnackBar(content: Text('Error deleting form: $e')),
       );
     }
   }
 
   void _closeSearch() {
     setState(() {
-      _searchedUser = null; // ตั้งค่าให้เป็น null เพื่อกลับไปดูรายการทั้งหมด
+      _searchedForm = null; // Reset search to show all forms
     });
   }
 
@@ -56,7 +58,7 @@ class _IndexuserState extends State<Indexuser> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('รายชื่อผู้ใช้'),
+        title: const Text('Forms'),
       ),
       body: Column(
         children: [
@@ -68,19 +70,19 @@ class _IndexuserState extends State<Indexuser> {
                   child: TextField(
                     controller: _searchController,
                     decoration: const InputDecoration(
-                      labelText: 'ค้นหาโดย User ID',
+                      labelText: 'Search by Form ID',
                       border: OutlineInputBorder(),
                     ),
                   ),
                 ),
                 IconButton(
                   icon: const Icon(Icons.search),
-                  onPressed: () => _searchUser(context),
+                  onPressed: () => _searchForm(context),
                 ),
               ],
             ),
           ),
-          if (_searchedUser != null)
+          if (_searchedForm != null)
             Expanded(
               child: Column(
                 children: [
@@ -91,21 +93,21 @@ class _IndexuserState extends State<Indexuser> {
                     child: ListTile(
                       contentPadding: const EdgeInsets.all(16.0),
                       title: Text(
-                        '${_searchedUser!.user.userPrefix} ${_searchedUser!.user.userFname} ${_searchedUser!.user.userLname}',
+                        'Form ID: ${_searchedForm!.formId}',
                         style: const TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                        ),
+                            fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const SizedBox(height: 8.0),
-                          Text('ID: ${_searchedUser!.user.userId}'),
-                          Text('Username: ${_searchedUser!.user.userName}'),
-                          Text('Role: ${_searchedUser!.user.role}'),
-                          Text('Phone: ${_searchedUser!.user.userPhone}'),
-                          Text('Email: ${_searchedUser!.user.userEmail}'),
+                          Text('Curriculum: ${_searchedForm!.curriculum}'),
+                          Text('Course Code: ${_searchedForm!.coursecodeFk}'),
+                          Text('Course Name: ${_searchedForm!.coursenameFk}'),
+                          Text('Credits: ${_searchedForm!.creditsFk}'),
+                          Text('Group: ${_searchedForm!.groupsFk}'),
+                          Text('Instructor: ${_searchedForm!.instructorFk}'),
+                          // Add other fields as necessary
                         ],
                       ),
                       trailing: Row(
@@ -120,7 +122,7 @@ class _IndexuserState extends State<Indexuser> {
                           IconButton(
                             icon: const Icon(Icons.delete, color: Colors.red),
                             onPressed: () {
-                              _deleteUser(context, _searchedUser!.user.userId);
+                              _deleteForm(context, _searchedForm!.formId);
                             },
                           ),
                         ],
@@ -129,29 +131,28 @@ class _IndexuserState extends State<Indexuser> {
                   ),
                   ElevatedButton(
                     onPressed: _closeSearch,
-                    child: const Text('ปิด'),
+                    child: const Text('Close'),
                   ),
                 ],
               ),
             )
           else
             Expanded(
-              child: FutureBuilder<List<UserModel>>(
-                future: _userController.getUsers(context),
+              child: FutureBuilder<List<FormModel>>(
+                future: _formController.getForms(context), // Get all forms
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
-                    return Center(
-                        child: Text('เกิดข้อผิดพลาด: ${snapshot.error}'));
+                    return Center(child: Text('Error: ${snapshot.error}'));
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return const Center(child: Text('ไม่มีข้อมูลผู้ใช้'));
+                    return const Center(child: Text('No forms available'));
                   } else {
-                    final users = snapshot.data!;
+                    final forms = snapshot.data!;
                     return ListView.builder(
-                      itemCount: users.length,
+                      itemCount: forms.length,
                       itemBuilder: (context, index) {
-                        final user = users[index].user;
+                        final form = forms[index];
                         return Card(
                           margin: const EdgeInsets.symmetric(
                               vertical: 8.0, horizontal: 16.0),
@@ -159,21 +160,21 @@ class _IndexuserState extends State<Indexuser> {
                           child: ListTile(
                             contentPadding: const EdgeInsets.all(16.0),
                             title: Text(
-                              '${user.userPrefix} ${user.userFname} ${user.userLname}',
+                              'Form ID: ${form.formId}',
                               style: const TextStyle(
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold,
-                              ),
+                                  fontSize: 18.0, fontWeight: FontWeight.bold),
                             ),
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const SizedBox(height: 8.0),
-                                Text('ID: ${user.userId}'),
-                                Text('Username: ${user.userName}'),
-                                Text('Role: ${user.role}'),
-                                Text('Phone: ${user.userPhone}'),
-                                Text('Email: ${user.userEmail}'),
+                                Text('Curriculum: ${form.curriculum}'),
+                                Text('Course Code: ${form.coursecodeFk}'),
+                                Text('Course Name: ${form.coursenameFk}'),
+                                Text('Credits: ${form.creditsFk}'),
+                                Text('Group: ${form.groupsFk}'),
+                                Text('Instructor: ${form.instructorFk}'),
+                                // Add other fields as necessary
                               ],
                             ),
                             trailing: Row(
@@ -190,7 +191,7 @@ class _IndexuserState extends State<Indexuser> {
                                   icon: const Icon(Icons.delete,
                                       color: Colors.red),
                                   onPressed: () {
-                                    _deleteUser(context, user.userId);
+                                    _deleteForm(context, form.formId);
                                   },
                                 ),
                               ],

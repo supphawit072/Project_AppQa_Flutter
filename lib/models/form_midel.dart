@@ -1,39 +1,31 @@
-// To parse this JSON data, do
-//
-//     final formModel = formModelFromJson(jsonString);
-
 import 'dart:convert';
 
-FormModel formModelFromJson(String str) => FormModel.fromJson(json.decode(str));
-
-String formModelToJson(FormModel data) => json.encode(data.toJson());
-
 class FormModel {
-  String id;
-  String curriculum;
-  String formId;
-  String coursecodeFk;
-  String coursenameFk;
-  String creditsFk;
-  String groupsFk;
-  String instructorFk;
-  int a;
-  int bPlus;
-  int b;
-  int cPlus;
-  int c;
-  int dPlus;
-  int d;
-  int e;
-  int f;
-  int fPercent;
-  int i;
-  int w;
-  int vg;
-  int g;
-  int s;
-  int u;
-  int total;
+  final String id; // Assuming this is a String based on the context
+  final String curriculum;
+  final String formId;
+  final String coursecodeFk;
+  final String coursenameFk;
+  final String creditsFk; // If this is meant to be a string
+  final String groupsFk;
+  final String instructorFk;
+  final int a;
+  final int bPlus;
+  final int b;
+  final int cPlus;
+  final int c;
+  final int dPlus;
+  final int d;
+  final int e;
+  final int f;
+  final int fPercent;
+  final int i;
+  final int w;
+  final int vg;
+  final int g;
+  final int s;
+  final int u;
+  final int total;
 
   FormModel({
     required this.id,
@@ -63,33 +55,35 @@ class FormModel {
     required this.total,
   });
 
-  factory FormModel.fromJson(Map<String, dynamic> json) => FormModel(
-        id: json["_id"],
-        curriculum: json["curriculum"],
-        formId: json["form_id"],
-        coursecodeFk: json["coursecode_FK"],
-        coursenameFk: json["coursename_FK"],
-        creditsFk: json["credits_FK"],
-        groupsFk: json["groups_FK"],
-        instructorFk: json["instructor_FK"],
-        a: json["A"],
-        bPlus: json["B_plus"],
-        b: json["B"],
-        cPlus: json["C_plus"],
-        c: json["C"],
-        dPlus: json["D_plus"],
-        d: json["D"],
-        e: json["E"],
-        f: json["F"],
-        fPercent: json["F_percent"],
-        i: json["I"],
-        w: json["W"],
-        vg: json["VG"],
-        g: json["G"],
-        s: json["S"],
-        u: json["U"],
-        total: json["total"],
-      );
+  factory FormModel.fromJson(Map<String, dynamic> json) {
+    return FormModel(
+      id: json["_id"].toString(), // Ensure this is treated as a String
+      curriculum: json["curriculum"],
+      formId: json["form_id"],
+      coursecodeFk: json["coursecode_FK"],
+      coursenameFk: json["coursename_FK"],
+      creditsFk: json["credits_FK"].toString(), // Convert if needed
+      groupsFk: json["groups_FK"],
+      instructorFk: json["instructor_FK"],
+      a: json["A"],
+      bPlus: json["B_plus"],
+      b: json["B"],
+      cPlus: json["C_plus"],
+      c: json["C"],
+      dPlus: json["D_plus"],
+      d: json["D"],
+      e: json["E"],
+      f: json["F"],
+      fPercent: json["F_percent"],
+      i: json["I"],
+      w: json["W"],
+      vg: json["VG"],
+      g: json["G"],
+      s: json["S"],
+      u: json["U"],
+      total: json["total"],
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "_id": id,
@@ -97,7 +91,7 @@ class FormModel {
         "form_id": formId,
         "coursecode_FK": coursecodeFk,
         "coursename_FK": coursenameFk,
-        "credits_FK": creditsFk,
+        "credits_FK": creditsFk, // Output as string or int as needed
         "groups_FK": groupsFk,
         "instructor_FK": instructorFk,
         "A": a,
@@ -119,3 +113,7 @@ class FormModel {
         "total": total,
       };
 }
+
+// Functions to handle JSON
+FormModel formModelFromJson(String str) => FormModel.fromJson(json.decode(str));
+String formModelToJson(FormModel data) => json.encode(data.toJson());

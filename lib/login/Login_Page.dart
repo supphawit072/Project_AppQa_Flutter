@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test/course/newcourse.dart';
+import 'package:test/form/index_form.dart';
 import 'package:test/form/newform.dart';
 import 'package:test/home/admin_home.dart';
 import 'package:test/models/admin_mdel.dart';
@@ -59,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
 
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => Indexuser()),
+        MaterialPageRoute(builder: (context) => IndexForm()),
       );
     } else if (response.statusCode == 400) {
       // แจ้งเตือนเมื่อชื่อผู้ใช้หรือรหัสผ่านผิด
