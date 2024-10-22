@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:test/models/course_model.dart';
 import 'package:test/provider/admin_provider.dart';
 import 'package:test/varbles.dart'; // เปลี่ยนเป็นไฟล์ที่ใช้งานจริง
 
@@ -51,37 +52,38 @@ class CourseController {
     }
   }
 
-  Future<List<dynamic>> getCourses(BuildContext context) async {
+  Future<List<CourseModel>> getCourses(BuildContext context) async {
     final adminProvider = Provider.of<AdminProvider>(context, listen: false);
     var accessToken = adminProvider.accessToken;
 
     final response = await http.get(
       Uri.parse('$apiURL/api/admin/course/viewcourses'),
       headers: {
-        "Authorization": "Bearer $accessToken", // เพิ่ม Token ใน Header
+        "Authorization": "Bearer $accessToken", // Add Token in Header
       },
     );
 
     if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+      List<dynamic> data = jsonDecode(response.body);
+      return data.map((item) => CourseModel.fromJson(item)).toList();
     } else {
       throw Exception('ไม่สามารถโหลดข้อมูลรายวิชาได้');
     }
   }
 
-  Future<dynamic> getCourse(BuildContext context, String courseId) async {
+  Future<CourseModel> getCourse(BuildContext context, String courseId) async {
     final adminProvider = Provider.of<AdminProvider>(context, listen: false);
     var accessToken = adminProvider.accessToken;
 
     final response = await http.get(
       Uri.parse('$apiURL/api/admin/course/viewcourse/$courseId'),
       headers: {
-        "Authorization": "Bearer $accessToken", // เพิ่ม Token ใน Header
+        "Authorization": "Bearer $accessToken", // Add Token in Header
       },
     );
 
     if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+      return CourseModel.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('ไม่สามารถโหลดข้อมูลรายวิชาได้');
     }
@@ -114,17 +116,30 @@ class CourseController {
     var accessToken = adminProvider.accessToken;
 
     final response = await http.delete(
-      Uri.parse('$apiURL/api/admin/del/$courseId'),
+      Uri.parse(
+          '$apiURL/api/admin/course/del/$courseId'), // Updated URL to delete course
       headers: {
-        "Authorization": "Bearer $accessToken", // เพิ่ม Token ใน Header
+        "Authorization": "Bearer $accessToken", // Add Token in Header
       },
     );
 
     if (response.statusCode == 200) {
-      // Handle successful deletion of course
-      print('Course deleted successfully');
+      // Show success message if deletion is successful
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('ลบรายวิชาเรียบร้อยแล้ว')),
+      );
     } else {
-      throw Exception('ไม่สามารถลบรายวิชาได้');
+      // If deletion fails, show status and message from server
+      print('สถานะการตอบกลับจากเซิร์ฟเวอร์: ${response.statusCode}');
+      print('รายละเอียดเพิ่มเติม: ${response.body}');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'ไม่สามารถลบรายวิชาได้: สถานะ ${response.statusCode} - ${response.body}',
+          ),
+        ),
+      );
+      throw Exception('ไม่สามารถลบรายวิชาได้: สถานะ ${response.statusCode}');
     }
   }
 }

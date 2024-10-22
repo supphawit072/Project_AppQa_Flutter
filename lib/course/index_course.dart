@@ -1,30 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:test/models/user_model.dart';
-import 'package:test/controllers/user_controller.dart';
+import 'package:test/controllers/CourseController.dart';
+import 'package:test/models/course_model.dart';
+import 'package:provider/provider.dart';
 
-class Indexuser extends StatefulWidget {
-  const Indexuser({super.key});
+class IndexCourse extends StatefulWidget {
+  const IndexCourse({super.key});
 
   @override
-  State<Indexuser> createState() => _IndexuserState();
+  State<IndexCourse> createState() => _IndexCourseState();
 }
 
-class _IndexuserState extends State<Indexuser> {
-  final UserController _userController = UserController();
+class _IndexCourseState extends State<IndexCourse> {
+  final CourseController _courseController = CourseController();
   final TextEditingController _searchController = TextEditingController();
-  UserModel? _searchedUser;
+  CourseModel? _searchedCourse;
 
-  Future<void> _searchUser(BuildContext context) async {
+  Future<void> _searchCourse(BuildContext context) async {
     try {
-      final user =
-          await _userController.getUser(context, _searchController.text);
+      final course =
+          await _courseController.getCourse(context, _searchController.text);
       setState(() {
-        _searchedUser = user;
+        _searchedCourse = course;
       });
     } catch (e) {
       print(e);
       setState(() {
-        _searchedUser = null;
+        _searchedCourse = null;
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('เกิดข้อผิดพลาด: $e')),
@@ -32,23 +33,25 @@ class _IndexuserState extends State<Indexuser> {
     }
   }
 
-  Future<void> _deleteUser(BuildContext context, String userId) async {
+  Future<void> _deleteCourse(BuildContext context, String courseId) async {
     try {
-      await _userController.deleteUser(context, userId);
+      await _courseController.deleteCourse(context, courseId);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('ลบผู้ใช้เรียบร้อยแล้ว')),
+        SnackBar(content: Text('ลบรายวิชาเรียบร้อยแล้ว')),
       );
-      _searchUser(context); // Refresh the user list after deletion
+      setState(() {
+        _searchedCourse = null; // Reset search
+      });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('เกิดข้อผิดพลาดในการลบผู้ใช้: $e')),
+        SnackBar(content: Text('เกิดข้อผิดพลาดในการลบรายวิชา: $e')),
       );
     }
   }
 
   void _closeSearch() {
     setState(() {
-      _searchedUser = null; // Reset search to show all users
+      _searchedCourse = null; // Reset search to show all courses
       _searchController.clear(); // Clear the search input
     });
   }
@@ -57,7 +60,7 @@ class _IndexuserState extends State<Indexuser> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('รายชื่อผู้ใช้'),
+        title: const Text('รายวิชา'),
       ),
       body: Column(
         children: [
@@ -69,19 +72,19 @@ class _IndexuserState extends State<Indexuser> {
                   child: TextField(
                     controller: _searchController,
                     decoration: const InputDecoration(
-                      labelText: 'ค้นหาโดย User ID',
+                      labelText: 'ค้นหาโดย Course ID',
                       border: OutlineInputBorder(),
                     ),
                   ),
                 ),
                 IconButton(
                   icon: const Icon(Icons.search),
-                  onPressed: () => _searchUser(context),
+                  onPressed: () => _searchCourse(context),
                 ),
               ],
             ),
           ),
-          if (_searchedUser != null)
+          if (_searchedCourse != null)
             Expanded(
               child: Column(
                 children: [
@@ -92,7 +95,7 @@ class _IndexuserState extends State<Indexuser> {
                     child: ListTile(
                       contentPadding: const EdgeInsets.all(16.0),
                       title: Text(
-                        '${_searchedUser!.user.userPrefix} ${_searchedUser!.user.userFname} ${_searchedUser!.user.userLname}',
+                        _searchedCourse!.courseName,
                         style: const TextStyle(
                           fontSize: 18.0,
                           fontWeight: FontWeight.bold,
@@ -102,11 +105,12 @@ class _IndexuserState extends State<Indexuser> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const SizedBox(height: 8.0),
-                          Text('ID: ${_searchedUser!.user.userId}'),
-                          Text('Username: ${_searchedUser!.user.userName}'),
-                          Text('Role: ${_searchedUser!.user.role}'),
-                          Text('Phone: ${_searchedUser!.user.userPhone}'),
-                          Text('Email: ${_searchedUser!.user.userEmail}'),
+                          Text('ID: ${_searchedCourse!.courseId}'),
+                          Text('Code: ${_searchedCourse!.courseCode}'),
+                          Text('Instructor: ${_searchedCourse!.instructor}'),
+                          Text('Credits: ${_searchedCourse!.credits}'),
+                          Text('Groups: ${_searchedCourse!.groups}'),
+                          Text('Accepting: ${_searchedCourse!.accepting}'),
                         ],
                       ),
                       trailing: Row(
@@ -121,7 +125,7 @@ class _IndexuserState extends State<Indexuser> {
                           IconButton(
                             icon: const Icon(Icons.delete, color: Colors.red),
                             onPressed: () {
-                              _deleteUser(context, _searchedUser!.user.userId);
+                              _deleteCourse(context, _searchedCourse!.courseId);
                             },
                           ),
                         ],
@@ -137,8 +141,9 @@ class _IndexuserState extends State<Indexuser> {
             )
           else
             Expanded(
-              child: FutureBuilder<List<UserModel>>(
-                future: _userController.getUsers(context), // Get all users
+              child: FutureBuilder<List<CourseModel>>(
+                future:
+                    _courseController.getCourses(context), // Get all courses
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
@@ -146,13 +151,13 @@ class _IndexuserState extends State<Indexuser> {
                     return Center(
                         child: Text('เกิดข้อผิดพลาด: ${snapshot.error}'));
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return const Center(child: Text('ไม่มีข้อมูลผู้ใช้'));
+                    return const Center(child: Text('ไม่มีข้อมูลรายวิชา'));
                   } else {
-                    final users = snapshot.data!;
+                    final courses = snapshot.data!;
                     return ListView.builder(
-                      itemCount: users.length,
+                      itemCount: courses.length,
                       itemBuilder: (context, index) {
-                        final user = users[index].user;
+                        final course = courses[index];
                         return Card(
                           margin: const EdgeInsets.symmetric(
                               vertical: 8.0, horizontal: 16.0),
@@ -160,7 +165,7 @@ class _IndexuserState extends State<Indexuser> {
                           child: ListTile(
                             contentPadding: const EdgeInsets.all(16.0),
                             title: Text(
-                              '${user.userPrefix} ${user.userFname} ${user.userLname}',
+                              course.courseName,
                               style: const TextStyle(
                                 fontSize: 18.0,
                                 fontWeight: FontWeight.bold,
@@ -170,11 +175,12 @@ class _IndexuserState extends State<Indexuser> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const SizedBox(height: 8.0),
-                                Text('ID: ${user.userId}'),
-                                Text('Username: ${user.userName}'),
-                                Text('Role: ${user.role}'),
-                                Text('Phone: ${user.userPhone}'),
-                                Text('Email: ${user.userEmail}'),
+                                Text('ID: ${course.courseId}'),
+                                Text('Code: ${course.courseCode}'),
+                                Text('Instructor: ${course.instructor}'),
+                                Text('Credits: ${course.credits}'),
+                                Text('Groups: ${course.groups}'),
+                                Text('Accepting: ${course.accepting}'),
                               ],
                             ),
                             trailing: Row(
@@ -191,7 +197,7 @@ class _IndexuserState extends State<Indexuser> {
                                   icon: const Icon(Icons.delete,
                                       color: Colors.red),
                                   onPressed: () {
-                                    _deleteUser(context, user.userId);
+                                    _deleteCourse(context, course.courseId);
                                   },
                                 ),
                               ],

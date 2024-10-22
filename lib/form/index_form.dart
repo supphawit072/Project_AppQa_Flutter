@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-// import 'package:test/controllers/form_controller.dart';
 import 'package:test/controllers/form_controllers.dart';
 import 'package:test/models/form_midel.dart';
-// import 'package:test/models/form_model.dart'; // Adjust import based on your file structure
 
 class IndexForm extends StatefulWidget {
   const IndexForm({super.key});
@@ -51,6 +49,7 @@ class _IndexFormState extends State<IndexForm> {
   void _closeSearch() {
     setState(() {
       _searchedForm = null; // Reset search to show all forms
+      _searchController.clear(); // Clear the search input
     });
   }
 
