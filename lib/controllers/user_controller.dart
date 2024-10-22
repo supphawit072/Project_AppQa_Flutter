@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'package:test/models/user_model.dart';
+import 'package:test/provider/admin_provider.dart';
 import 'package:test/varbles.dart';
 
 import '../models/user_model.dart';
@@ -48,9 +50,15 @@ class UserController {
   // Other methods...
 
   Future<List<UserModel>> getUsers(BuildContext context) async {
-    final response =
-        await http.get(Uri.parse('$apiURL/api/admin/user/viewusers'));
-
+    final adminProvider = Provider.of<AdminProvider>(context, listen: false);
+    var accessToken = adminProvider.accessToken;
+    final response = await http.get(
+      Uri.parse('$apiURL/api/admin/user/viewusers'),
+      headers: {
+        "Authorization": "Bearer $accessToken",
+      },
+    );
+    print(response.statusCode);
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
       return data.map((item) => UserModel.fromJson(item)).toList();

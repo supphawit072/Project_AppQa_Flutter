@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test/course/newcourse.dart';
 import 'package:test/form/newform.dart';
+import 'package:test/home/admin_home.dart';
 import 'package:test/models/admin_mdel.dart';
 import 'package:test/pagenew_accont/create_accont.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:test/pagenew_accont/index_user.dart';
 import 'package:test/provider/admin_provider.dart';
 import 'package:test/varbles.dart';
 
@@ -57,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
 
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => FormFormScreen()),
+        MaterialPageRoute(builder: (context) => Indexuser()),
       );
     } else if (response.statusCode == 400) {
       // แจ้งเตือนเมื่อชื่อผู้ใช้หรือรหัสผ่านผิด

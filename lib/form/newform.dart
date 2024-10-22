@@ -160,14 +160,22 @@ class _FormFormScreenState extends State<FormFormScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey,
       appBar: AppBar(
-        title: Text('สร้างรายวิชาใหม่'),
-        backgroundColor: Colors.blue,
+        title: Text(
+          'Welcome to create newform',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: Colors.deepPurpleAccent,
       ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Card(
+            color: Colors.deepPurple[100],
             elevation: 8,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16.0),
@@ -180,11 +188,11 @@ class _FormFormScreenState extends State<FormFormScreen> {
                   shrinkWrap: true,
                   children: [
                     Text(
-                      'สร้างรายวิชาใหม่',
+                      'สร้างรายเเบบฟอร์มใหม่',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: Colors.blue,
+                        color: Colors.black54,
                       ),
                     ),
                     SizedBox(height: 16),
@@ -456,7 +464,13 @@ class _FormFormScreenState extends State<FormFormScreen> {
                     SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: _submitForm,
-                      child: Text('สร้างรายวิชา'),
+                      child: Text(
+                        'สร้างรายวิชา',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
                         padding:

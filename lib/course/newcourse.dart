@@ -66,14 +66,22 @@ class _CourseFormScreenState extends State<CourseFormScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey,
       appBar: AppBar(
-        title: Text('สร้างรายวิชาใหม่'),
-        backgroundColor: Colors.blue,
+        title: Text(
+          'Welcome to create newcourse',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: Colors.deepPurpleAccent,
       ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Card(
+            color: Colors.deepPurple[100],
             elevation: 8,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16.0),
@@ -90,7 +98,7 @@ class _CourseFormScreenState extends State<CourseFormScreen> {
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: Colors.blue,
+                        color: Colors.black54,
                       ),
                     ),
                     SizedBox(height: 16),
@@ -194,7 +202,13 @@ class _CourseFormScreenState extends State<CourseFormScreen> {
                     SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: _submitForm,
-                      child: Text('สร้างรายวิชา'),
+                      child: Text(
+                        'สร้างรายวิชา',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
                         padding:

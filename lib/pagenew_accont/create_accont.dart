@@ -73,14 +73,23 @@ class _UserFormScreenState extends State<UserFormScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey,
       appBar: AppBar(
-        title: Text('สร้างผู้ใช้ใหม่'),
-        backgroundColor: Colors.blue,
+        title: Text(
+          'Welcome to account creation',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: Colors.deepPurpleAccent,
+        elevation: 0,
       ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Card(
+            color: Colors.deepPurple[100],
             elevation: 8,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16.0),
@@ -97,7 +106,7 @@ class _UserFormScreenState extends State<UserFormScreen> {
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: Colors.blue,
+                        color: Colors.black54,
                       ),
                     ),
                     SizedBox(height: 16),
@@ -167,7 +176,13 @@ class _UserFormScreenState extends State<UserFormScreen> {
                     SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: _submitForm,
-                      child: Text('สร้างผู้ใช้'),
+                      child: Text(
+                        'สร้างผู้ใช้',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
                         padding:
