@@ -71,7 +71,7 @@ class _EditCoursePageState extends State<EditCoursePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'แก้ไขวิชา',
+          'Welcom To EditCourse',
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
         backgroundColor: Colors.deepPurple,

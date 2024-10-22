@@ -173,6 +173,9 @@ class _IndexCourseState extends State<IndexCourse> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.deepPurple[700],
                       minimumSize: const Size.fromHeight(50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
                     child: const Text('ปิด',
                         style: TextStyle(color: Colors.white)),

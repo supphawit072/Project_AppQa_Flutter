@@ -88,7 +88,7 @@ class _IndexFormState extends State<IndexForm> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Forms',
+          'List Forms',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,

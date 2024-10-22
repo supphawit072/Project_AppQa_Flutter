@@ -179,6 +179,7 @@ class _IndexuserState extends State<Indexuser> {
                     ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
+                        minimumSize: const Size.fromHeight(50),
                         backgroundColor: Colors.deepPurple,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
@@ -186,7 +187,7 @@ class _IndexuserState extends State<Indexuser> {
                       ),
                       onPressed: _closeSearch,
                       child: const Text(
-                        'กลับ',
+                        'ปิด',
                         style: TextStyle(
                             fontWeight: FontWeight.bold, color: Colors.white),
                       ),
