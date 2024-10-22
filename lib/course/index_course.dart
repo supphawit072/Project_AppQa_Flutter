@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:test/controllers/CourseController.dart';
+import 'package:test/course/edit_course.dart';
+import 'package:test/course/newcourse.dart';
+import 'package:test/home/admin_home.dart';
 import 'package:test/models/course_model.dart';
-import 'package:provider/provider.dart';
 
 class IndexCourse extends StatefulWidget {
   const IndexCourse({super.key});
@@ -37,10 +39,10 @@ class _IndexCourseState extends State<IndexCourse> {
     try {
       await _courseController.deleteCourse(context, courseId);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('ลบรายวิชาเรียบร้อยแล้ว')),
+        const SnackBar(content: Text('ลบรายวิชาเรียบร้อยแล้ว')),
       );
       setState(() {
-        _searchedCourse = null; // Reset search
+        _searchedCourse = null;
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -51,8 +53,8 @@ class _IndexCourseState extends State<IndexCourse> {
 
   void _closeSearch() {
     setState(() {
-      _searchedCourse = null; // Reset search to show all courses
-      _searchController.clear(); // Clear the search input
+      _searchedCourse = null;
+      _searchController.clear();
     });
   }
 
@@ -60,7 +62,24 @@ class _IndexCourseState extends State<IndexCourse> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('รายวิชา'),
+        backgroundColor: Colors.deepPurple[700],
+        title: const Text('List Course', style: TextStyle(color: Colors.white)),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.home,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        HomeScreen()), // Navigate to HomeScreen
+              );
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -71,19 +90,24 @@ class _IndexCourseState extends State<IndexCourse> {
                 Expanded(
                   child: TextField(
                     controller: _searchController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: 'ค้นหาโดย Course ID',
-                      border: OutlineInputBorder(),
+                      labelStyle: TextStyle(color: Colors.deepPurple[700]),
+                      border: const OutlineInputBorder(),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.deepPurple),
+                      ),
                     ),
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.search),
+                  icon: const Icon(Icons.search, color: Colors.deepPurple),
                   onPressed: () => _searchCourse(context),
                 ),
               ],
             ),
           ),
+          const SizedBox(height: 10),
           if (_searchedCourse != null)
             Expanded(
               child: Column(
@@ -118,8 +142,20 @@ class _IndexCourseState extends State<IndexCourse> {
                         children: [
                           IconButton(
                             icon: const Icon(Icons.edit, color: Colors.blue),
-                            onPressed: () {
-                              // Add your edit functionality here
+                            onPressed: () async {
+                              final updatedCourse = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EditCoursePage(
+                                      courseModel: _searchedCourse!),
+                                ),
+                              );
+
+                              if (updatedCourse != null) {
+                                setState(() {
+                                  _searchedCourse = updatedCourse;
+                                });
+                              }
                             },
                           ),
                           IconButton(
@@ -134,7 +170,12 @@ class _IndexCourseState extends State<IndexCourse> {
                   ),
                   ElevatedButton(
                     onPressed: _closeSearch,
-                    child: const Text('ปิด'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.deepPurple[700],
+                      minimumSize: const Size.fromHeight(50),
+                    ),
+                    child: const Text('ปิด',
+                        style: TextStyle(color: Colors.white)),
                   ),
                 ],
               ),
@@ -142,8 +183,7 @@ class _IndexCourseState extends State<IndexCourse> {
           else
             Expanded(
               child: FutureBuilder<List<CourseModel>>(
-                future:
-                    _courseController.getCourses(context), // Get all courses
+                future: _courseController.getCourses(context),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
@@ -189,8 +229,20 @@ class _IndexCourseState extends State<IndexCourse> {
                                 IconButton(
                                   icon: const Icon(Icons.edit,
                                       color: Colors.blue),
-                                  onPressed: () {
-                                    // Add your edit functionality here
+                                  onPressed: () async {
+                                    final updatedCourse = await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            EditCoursePage(courseModel: course),
+                                      ),
+                                    );
+
+                                    if (updatedCourse != null) {
+                                      setState(() {
+                                        courses[index] = updatedCourse;
+                                      });
+                                    }
                                   },
                                 ),
                                 IconButton(
@@ -211,6 +263,28 @@ class _IndexCourseState extends State<IndexCourse> {
               ),
             ),
         ],
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ElevatedButton.icon(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.deepPurple[700], // Button color
+            minimumSize: const Size.fromHeight(50), // Full-width button
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+          icon: const Icon(Icons.add, color: Colors.white),
+          label: const Text('เพิ่มรายวิชา',
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CourseFormScreen()),
+            );
+          },
+        ),
       ),
     );
   }

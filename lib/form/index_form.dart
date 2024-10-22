@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:test/controllers/form_controllers.dart';
+import 'package:test/form/edit_form.dart';
+import 'package:test/form/newform.dart';
+import 'package:test/home/admin_home.dart';
 import 'package:test/models/form_midel.dart';
 
 class IndexForm extends StatefulWidget {
@@ -53,11 +56,54 @@ class _IndexFormState extends State<IndexForm> {
     });
   }
 
+  void _editForm(FormModel form) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditFormPage(formModel: form),
+      ),
+    );
+  }
+
+  void _navigateToAddForm() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => FormFormScreen(), // Navigate to FormFormScreen
+      ),
+    );
+  }
+
+  void _navigateToHome() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => HomeScreen(), // Navigate to HomeScreen
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Forms'),
+        title: const Text(
+          'Forms',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: Colors.deepPurple[700],
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.home,
+              color: Colors.white,
+            ),
+            onPressed: _navigateToHome, // Navigate to HomeScreen
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -75,7 +121,7 @@ class _IndexFormState extends State<IndexForm> {
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.search),
+                  icon: const Icon(Icons.search, color: Colors.deepPurple),
                   onPressed: () => _searchForm(context),
                 ),
               ],
@@ -106,7 +152,6 @@ class _IndexFormState extends State<IndexForm> {
                           Text('Credits: ${_searchedForm!.creditsFk}'),
                           Text('Group: ${_searchedForm!.groupsFk}'),
                           Text('Instructor: ${_searchedForm!.instructorFk}'),
-                          // Add other fields as necessary
                         ],
                       ),
                       trailing: Row(
@@ -115,7 +160,7 @@ class _IndexFormState extends State<IndexForm> {
                           IconButton(
                             icon: const Icon(Icons.edit, color: Colors.blue),
                             onPressed: () {
-                              // Add your edit functionality here
+                              _editForm(_searchedForm!);
                             },
                           ),
                           IconButton(
@@ -130,7 +175,20 @@ class _IndexFormState extends State<IndexForm> {
                   ),
                   ElevatedButton(
                     onPressed: _closeSearch,
-                    child: const Text('Close'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.deepPurple[700],
+                      minimumSize: const Size.fromHeight(50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text(
+                      'ปิด',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -138,7 +196,7 @@ class _IndexFormState extends State<IndexForm> {
           else
             Expanded(
               child: FutureBuilder<List<FormModel>>(
-                future: _formController.getForms(context), // Get all forms
+                future: _formController.getForms(context),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
@@ -173,7 +231,6 @@ class _IndexFormState extends State<IndexForm> {
                                 Text('Credits: ${form.creditsFk}'),
                                 Text('Group: ${form.groupsFk}'),
                                 Text('Instructor: ${form.instructorFk}'),
-                                // Add other fields as necessary
                               ],
                             ),
                             trailing: Row(
@@ -183,7 +240,7 @@ class _IndexFormState extends State<IndexForm> {
                                   icon: const Icon(Icons.edit,
                                       color: Colors.blue),
                                   onPressed: () {
-                                    // Add your edit functionality here
+                                    _editForm(form);
                                   },
                                 ),
                                 IconButton(
@@ -203,6 +260,30 @@ class _IndexFormState extends State<IndexForm> {
                 },
               ),
             ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ElevatedButton.icon(
+              onPressed: _navigateToAddForm,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.deepPurple[700],
+                minimumSize: const Size.fromHeight(50),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              icon: const Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
+              label: const Text(
+                'เพิ่มเเบบฟอม',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

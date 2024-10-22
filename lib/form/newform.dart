@@ -160,10 +160,10 @@ class _FormFormScreenState extends State<FormFormScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey,
+      backgroundColor: Colors.grey[200],
       appBar: AppBar(
         title: Text(
-          'Welcome to create newform',
+          'Welcom To New Form',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -175,7 +175,7 @@ class _FormFormScreenState extends State<FormFormScreen> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Card(
-            color: Colors.deepPurple[100],
+            color: Colors.white,
             elevation: 8,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16.0),
@@ -188,11 +188,11 @@ class _FormFormScreenState extends State<FormFormScreen> {
                   shrinkWrap: true,
                   children: [
                     Text(
-                      'สร้างรายเเบบฟอร์มใหม่',
+                      'กรอกข้อมูลสำหรับสร้างแบบฟอร์ม',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black54,
+                        color: Colors.deepPurple[700],
                       ),
                     ),
                     SizedBox(height: 16),
@@ -200,8 +200,9 @@ class _FormFormScreenState extends State<FormFormScreen> {
                     TextFormField(
                       controller: _curriculumController,
                       decoration: InputDecoration(
-                        labelText: 'Curriculum',
-                        prefixIcon: Icon(Icons.school),
+                        labelText: 'หลักสูตร',
+                        prefixIcon:
+                            Icon(Icons.school, color: Colors.deepPurple[700]),
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -211,7 +212,8 @@ class _FormFormScreenState extends State<FormFormScreen> {
                       controller: _courseCodeFKController,
                       decoration: InputDecoration(
                         labelText: 'รหัสวิชา',
-                        prefixIcon: Icon(Icons.code),
+                        prefixIcon:
+                            Icon(Icons.code, color: Colors.deepPurple[700]),
                         border: OutlineInputBorder(),
                       ),
                       validator: (value) {
@@ -227,7 +229,8 @@ class _FormFormScreenState extends State<FormFormScreen> {
                       controller: _courseNameFKController,
                       decoration: InputDecoration(
                         labelText: 'ชื่อวิชา',
-                        prefixIcon: Icon(Icons.book),
+                        prefixIcon:
+                            Icon(Icons.book, color: Colors.deepPurple[700]),
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -237,7 +240,8 @@ class _FormFormScreenState extends State<FormFormScreen> {
                       controller: _creditsFKController,
                       decoration: InputDecoration(
                         labelText: 'หน่วยกิต',
-                        prefixIcon: Icon(Icons.star),
+                        prefixIcon:
+                            Icon(Icons.star, color: Colors.deepPurple[700]),
                         border: OutlineInputBorder(),
                       ),
                       keyboardType: TextInputType.number,
@@ -254,7 +258,8 @@ class _FormFormScreenState extends State<FormFormScreen> {
                       controller: _groupsFKController,
                       decoration: InputDecoration(
                         labelText: 'กลุ่ม',
-                        prefixIcon: Icon(Icons.group),
+                        prefixIcon:
+                            Icon(Icons.group, color: Colors.deepPurple[700]),
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -263,219 +268,31 @@ class _FormFormScreenState extends State<FormFormScreen> {
                     TextFormField(
                       controller: _instructorFKController,
                       decoration: InputDecoration(
-                        labelText: 'ผู้สอน',
-                        prefixIcon: Icon(Icons.person),
+                        labelText: 'อาจารย์',
+                        prefixIcon:
+                            Icon(Icons.person, color: Colors.deepPurple[700]),
                         border: OutlineInputBorder(),
                       ),
                     ),
                     SizedBox(height: 16),
-                    // Grades Fields (Example for A and B_plus)
-                    TextFormField(
-                      controller: _aController,
-                      decoration: InputDecoration(
-                        labelText: 'A Grades',
-                        prefixIcon: Icon(Icons.grade),
-                        border: OutlineInputBorder(),
-                      ),
-                      keyboardType: TextInputType.number,
-                    ),
+                    // Grade inputs
+                    ...buildGradeFields(),
                     SizedBox(height: 16),
-                    TextFormField(
-                      controller: _bPlusController,
-                      decoration: InputDecoration(
-                        labelText: 'B+ Grades',
-                        prefixIcon: Icon(Icons.grade),
-                        border: OutlineInputBorder(),
-                      ),
-                      keyboardType: TextInputType.number,
-                    ),
-                    SizedBox(height: 16),
-                    TextFormField(
-                      controller: _bController,
-                      decoration: InputDecoration(
-                        labelText: 'B Grades',
-                        prefixIcon: Icon(Icons.grade),
-                        border: OutlineInputBorder(),
-                      ),
-                      keyboardType: TextInputType.number,
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    TextFormField(
-                      controller: _cPlusController,
-                      decoration: InputDecoration(
-                        labelText: 'C+ Grades',
-                        prefixIcon: Icon(Icons.grade),
-                        border: OutlineInputBorder(),
-                      ),
-                      keyboardType: TextInputType.number,
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    TextFormField(
-                      controller: _cController,
-                      decoration: InputDecoration(
-                        labelText: 'C Grades',
-                        prefixIcon: Icon(Icons.grade),
-                        border: OutlineInputBorder(),
-                      ),
-                      keyboardType: TextInputType.number,
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    TextFormField(
-                      controller: _dPlusController,
-                      decoration: InputDecoration(
-                        labelText: 'D+ Grades',
-                        prefixIcon: Icon(Icons.grade),
-                        border: OutlineInputBorder(),
-                      ),
-                      keyboardType: TextInputType.number,
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    TextFormField(
-                      controller: _dController,
-                      decoration: InputDecoration(
-                        labelText: 'D Grades',
-                        prefixIcon: Icon(Icons.grade),
-                        border: OutlineInputBorder(),
-                      ),
-                      keyboardType: TextInputType.number,
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    TextFormField(
-                      controller: _eController,
-                      decoration: InputDecoration(
-                        labelText: 'E Grades',
-                        prefixIcon: Icon(Icons.grade),
-                        border: OutlineInputBorder(),
-                      ),
-                      keyboardType: TextInputType.number,
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    TextFormField(
-                      controller: _fController,
-                      decoration: InputDecoration(
-                        labelText: 'F Grades',
-                        prefixIcon: Icon(Icons.grade),
-                        border: OutlineInputBorder(),
-                      ),
-                      keyboardType: TextInputType.number,
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    TextFormField(
-                      controller: _fPercentController,
-                      decoration: InputDecoration(
-                        labelText: 'F% Grades',
-                        prefixIcon: Icon(Icons.grade),
-                        border: OutlineInputBorder(),
-                      ),
-                      keyboardType: TextInputType.number,
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    TextFormField(
-                      controller: _iController,
-                      decoration: InputDecoration(
-                        labelText: 'I Grades',
-                        prefixIcon: Icon(Icons.grade),
-                        border: OutlineInputBorder(),
-                      ),
-                      keyboardType: TextInputType.number,
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    TextFormField(
-                      controller: _wController,
-                      decoration: InputDecoration(
-                        labelText: 'W Grades',
-                        prefixIcon: Icon(Icons.grade),
-                        border: OutlineInputBorder(),
-                      ),
-                      keyboardType: TextInputType.number,
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    TextFormField(
-                      controller: _vgController,
-                      decoration: InputDecoration(
-                        labelText: 'VG Grades',
-                        prefixIcon: Icon(Icons.grade),
-                        border: OutlineInputBorder(),
-                      ),
-                      keyboardType: TextInputType.number,
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    TextFormField(
-                      controller: _gController,
-                      decoration: InputDecoration(
-                        labelText: 'G Grades',
-                        prefixIcon: Icon(Icons.grade),
-                        border: OutlineInputBorder(),
-                      ),
-                      keyboardType: TextInputType.number,
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    TextFormField(
-                      controller: _sController,
-                      decoration: InputDecoration(
-                        labelText: 'S Grades',
-                        prefixIcon: Icon(Icons.grade),
-                        border: OutlineInputBorder(),
-                      ),
-                      keyboardType: TextInputType.number,
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    TextFormField(
-                      controller: _uController,
-                      decoration: InputDecoration(
-                        labelText: 'U Grades',
-                        prefixIcon: Icon(Icons.grade),
-                        border: OutlineInputBorder(),
-                      ),
-                      keyboardType: TextInputType.number,
-                    ),
-
-                    SizedBox(height: 16),
-                    // Total Grade Display
-                    Text('Total Grade: $totalGrade',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
-                    SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: _submitForm,
                       child: Text(
-                        'สร้างรายวิชา',
+                        'สร้างแบบฟอร์ม',
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                        textStyle: TextStyle(fontSize: 18),
+                        backgroundColor: Colors.deepPurpleAccent,
+                        padding: EdgeInsets.symmetric(vertical: 16.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
                     ),
                   ],
@@ -485,6 +302,79 @@ class _FormFormScreenState extends State<FormFormScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  List<Widget> buildGradeFields() {
+    return [
+      Text(
+        'กรอกคะแนน',
+        style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Colors.deepPurple[700],
+        ),
+      ),
+      SizedBox(height: 16),
+      // Grade A
+      buildGradeField(_aController, 'A'),
+      SizedBox(height: 10),
+      // Grade B+
+      buildGradeField(_bPlusController, 'B+'),
+      SizedBox(height: 10),
+      // Grade B
+      buildGradeField(_bController, 'B'),
+      SizedBox(height: 10),
+      // Grade C+
+      buildGradeField(_cPlusController, 'C+'),
+      SizedBox(height: 10),
+      // Grade C
+      buildGradeField(_cController, 'C'),
+      SizedBox(height: 10),
+      // Grade D+
+      buildGradeField(_dPlusController, 'D+'),
+      SizedBox(height: 10),
+      // Grade D
+      buildGradeField(_dController, 'D'),
+      SizedBox(height: 10),
+      // Grade E
+      buildGradeField(_eController, 'E'),
+      SizedBox(height: 10),
+      // Grade F
+      buildGradeField(_fController, 'F'),
+      SizedBox(height: 10),
+      // Grade F Percent
+      buildGradeField(_fPercentController, 'F Percent'),
+      SizedBox(height: 10),
+      // Grade I
+      buildGradeField(_iController, 'I'),
+      SizedBox(height: 10),
+      // Grade W
+      buildGradeField(_wController, 'W'),
+      SizedBox(height: 10),
+      // Grade VG
+      buildGradeField(_vgController, 'VG'),
+      SizedBox(height: 10),
+      // Grade G
+      buildGradeField(_gController, 'G'),
+      SizedBox(height: 10),
+      // Grade S
+      buildGradeField(_sController, 'S'),
+      SizedBox(height: 10),
+      // Grade U
+      buildGradeField(_uController, 'U'),
+      SizedBox(height: 10),
+    ];
+  }
+
+  Widget buildGradeField(TextEditingController controller, String label) {
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        border: OutlineInputBorder(),
+      ),
+      keyboardType: TextInputType.number,
     );
   }
 }

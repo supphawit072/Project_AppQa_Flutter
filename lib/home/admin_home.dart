@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:test/course/newcourse.dart'; // ตรวจสอบว่าเส้นทางถูกต้อง
-import 'package:test/form/newform.dart'; // ตรวจสอบว่าเส้นทางถูกต้อง
-import 'package:test/pagenew_accont/create_accont.dart'; // ตรวจสอบว่าเส้นทางถูกต้อง
+import 'package:test/course/index_course.dart';
+import 'package:test/form/index_form.dart';
+import 'package:test/login/Login_Page.dart';
+import 'package:test/pagenew_accont/index_user.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -9,14 +10,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Color _userButtonColor = Colors.yellow;
-  Color _courseButtonColor = Colors.pink;
-  Color _formButtonColor = Colors.deepPurpleAccent;
+  Color _userButtonColor = Colors.purpleAccent; // เปลี่ยนสีเริ่มต้น
+  Color _courseButtonColor = Colors.deepPurple; // เปลี่ยนสีเริ่มต้น
+  Color _formButtonColor = Colors.purple; // เปลี่ยนสีเริ่มต้น
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueGrey.shade200,
+      backgroundColor: Colors.purple.shade50, // เปลี่ยนพื้นหลังเป็นสีม่วงอ่อน
       appBar: AppBar(
         backgroundColor: Colors.deepPurpleAccent,
         elevation: 0,
@@ -25,6 +26,21 @@ class _HomeScreenState extends State<HomeScreen> {
           'Welcome to Home Page',
           style: TextStyle(color: Colors.white),
         ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.logout,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => LoginPage()),
+              );
+            },
+            tooltip: 'Logout',
+          ),
+        ],
       ),
       body: Center(
         child: Column(
@@ -35,29 +51,26 @@ class _HomeScreenState extends State<HomeScreen> {
               style: TextStyle(
                 fontSize: 36,
                 fontWeight: FontWeight.bold,
-                color: Colors.orange,
+                color: Colors.deepPurple, // เปลี่ยนสีข้อความ
               ),
             ),
+            SizedBox(height: 20), // ระยะห่างระหว่างข้อความและภาพ
             Container(
-              // padding: EdgeInsets.all(40),
-              margin: EdgeInsets.all(10), // เพิ่มระยะห่างจากขอบ
+              margin: EdgeInsets.all(10),
               child: ClipRRect(
-                // เพิ่มระยะห่างจากขอบ
-                borderRadius: BorderRadius.circular(
-                    20), // ปรับค่าความโค้งของขอบตามต้องการ
+                borderRadius: BorderRadius.circular(20),
                 child: Image.network(
                   'https://i.pinimg.com/control/236x/b4/ab/72/b4ab7222da63b12c06c8e3ba9290bd0b.jpg',
                   height: 200,
                   width: 350,
-                  fit: BoxFit.cover, // ให้ภาพเต็มขนาดของกรอบที่กำหนด
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
+            SizedBox(height: 20), // ระยะห่างระหว่างภาพและปุ่ม
             Container(
               width: 350,
-              height: 400,
-              padding: EdgeInsets.all(40),
-              margin: EdgeInsets.all(20), // เพิ่มระยะห่างจากขอบ
+              padding: EdgeInsets.all(20), // ปรับ padding
               decoration: BoxDecoration(
                 color: Colors.deepPurple[100],
                 borderRadius: BorderRadius.circular(20),
@@ -76,12 +89,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     context,
                     'เพิ่มบัญชีผู้ใช้',
                     _userButtonColor,
-                    UserFormScreen(),
+                    Indexuser(),
                     onHover: (isHovered) {
                       setState(() {
                         _userButtonColor = isHovered
-                            ? Colors.yellow.withOpacity(0.7)
-                            : Colors.yellow;
+                            ? Colors.purpleAccent.withOpacity(0.7)
+                            : Colors.purpleAccent;
                       });
                     },
                   ),
@@ -90,12 +103,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     context,
                     'เพิ่มรายวิชา',
                     _courseButtonColor,
-                    CourseFormScreen(),
+                    IndexCourse(),
                     onHover: (isHovered) {
                       setState(() {
                         _courseButtonColor = isHovered
-                            ? Colors.pink.withOpacity(0.7)
-                            : Colors.pink;
+                            ? Colors.deepPurple.withOpacity(0.7)
+                            : Colors.deepPurple;
                       });
                     },
                   ),
@@ -104,12 +117,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     context,
                     'เพิ่มแบบฟอร์ม',
                     _formButtonColor,
-                    FormFormScreen(),
+                    IndexForm(),
                     onHover: (isHovered) {
                       setState(() {
                         _formButtonColor = isHovered
-                            ? Colors.deepPurpleAccent.withOpacity(0.7)
-                            : Colors.deepPurpleAccent;
+                            ? Colors.purple.withOpacity(0.7)
+                            : Colors.purple;
                       });
                     },
                   ),
@@ -133,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
       onEnter: (_) => onHover(true),
       onExit: (_) => onHover(false),
       child: SizedBox(
-        width: 200,
+        width: double.infinity, // ปรับให้เต็มความกว้าง
         child: ElevatedButton(
           onPressed: () {
             Navigator.push(

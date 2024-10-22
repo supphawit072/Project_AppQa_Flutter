@@ -37,6 +37,7 @@ class _LoginPageState extends State<LoginPage> {
           backgroundColor: Colors.red,
         ),
       );
+      return; // เพิ่มการ return เพื่อไม่ให้ทำการส่งข้อมูลต่อ
     }
 
     final response = await http.post(
@@ -61,7 +62,7 @@ class _LoginPageState extends State<LoginPage> {
 
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => IndexCourse()),
+        MaterialPageRoute(builder: (context) => HomeScreen()),
       );
     } else if (response.statusCode == 400) {
       // แจ้งเตือนเมื่อชื่อผู้ใช้หรือรหัสผ่านผิด
@@ -89,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.pink.shade800, Colors.blue.shade900],
+            colors: [Colors.purple.shade500, Colors.pink.shade500],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -152,7 +153,7 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: login, // เรียกใช้ฟังก์ชัน login
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.black,
-                    backgroundColor: Colors.white,
+                    backgroundColor: Colors.purple.shade100, // ปรับสีปุ่ม
                     padding: const EdgeInsets.symmetric(
                         horizontal: 100, vertical: 15),
                     shape: RoundedRectangleBorder(

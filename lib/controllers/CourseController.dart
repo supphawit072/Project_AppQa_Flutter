@@ -95,14 +95,14 @@ class CourseController {
     var accessToken = adminProvider.accessToken;
 
     final response = await http.put(
-      Uri.parse('$apiURL/api/admin/upd/$courseId'),
+      Uri.parse('$apiURL/api/admin/course/upd/$courseId'),
       headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer $accessToken", // เพิ่ม Token ใน Header
       },
       body: jsonEncode(courseData),
     );
-
+    print(response.statusCode);
     if (response.statusCode == 200) {
       // Handle successful update of course
       print('Course updated successfully');

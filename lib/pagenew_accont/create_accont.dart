@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:test/controllers/user_controller.dart';
 import 'package:test/models/user_model.dart';
-import '../../provider/user_provider.dart';
+import 'package:test/pagenew_accont/index_user.dart';
 
 class UserFormScreen extends StatefulWidget {
   @override
@@ -38,7 +37,7 @@ class _UserFormScreenState extends State<UserFormScreen> {
     _userEmail = _userEmailController.text;
 
     if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save(); // เรียก save() เพื่อบันทึกค่าที่กรอกไว้
+      _formKey.currentState!.save();
       print(
           "ข้อมูลที่ส่ง: คำนำหน้า: $_userPrefix, ชื่อ: $_userFname, นามสกุล: $_userLname, ชื่อผู้ใช้: $_userName, รหัสผ่าน: $_password, เบอร์โทร: $_userPhone, อีเมล: $_userEmail, บทบาท: $_role");
 
@@ -59,9 +58,13 @@ class _UserFormScreenState extends State<UserFormScreen> {
           content: Text('ผู้ใช้ถูกสร้างสำเร็จ'),
           backgroundColor: Colors.green,
         ));
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => Indexuser()),
+        );
       } catch (e) {
-        print(
-            'เกิดข้อผิดพลาด: $e'); // แสดงรายละเอียดของข้อผิดพลาดใน debug console
+        print('เกิดข้อผิดพลาด: $e');
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('เกิดข้อผิดพลาดในการสร้างผู้ใช้'),
           backgroundColor: Colors.red,
@@ -73,7 +76,7 @@ class _UserFormScreenState extends State<UserFormScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey,
+      backgroundColor: Colors.deepPurple[50],
       appBar: AppBar(
         title: Text(
           'Welcome to account creation',
@@ -82,7 +85,7 @@ class _UserFormScreenState extends State<UserFormScreen> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.deepPurpleAccent,
+        backgroundColor: Colors.deepPurple,
         elevation: 0,
       ),
       body: Center(
@@ -95,7 +98,7 @@ class _UserFormScreenState extends State<UserFormScreen> {
               borderRadius: BorderRadius.circular(16.0),
             ),
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(24.0),
               child: Form(
                 key: _formKey,
                 child: ListView(
@@ -103,77 +106,57 @@ class _UserFormScreenState extends State<UserFormScreen> {
                   children: [
                     Text(
                       'สร้างบัญชีใหม่',
+                      textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: 24,
+                        fontSize: 26,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black54,
+                        color: Colors.deepPurple[800],
                       ),
                     ),
-                    SizedBox(height: 16),
-                    TextFormField(
+                    SizedBox(height: 24),
+                    _buildTextField(
                       controller: _userPrefixController,
-                      decoration: InputDecoration(
-                        labelText: 'คำนำหน้า',
-                        prefixIcon: Icon(Icons.person),
-                        border: OutlineInputBorder(),
-                      ),
+                      labelText: 'คำนำหน้า',
+                      icon: Icons.person,
                     ),
                     SizedBox(height: 16),
-                    TextFormField(
+                    _buildTextField(
                       controller: _userFnameController,
-                      decoration: InputDecoration(
-                        labelText: 'ชื่อ',
-                        prefixIcon: Icon(Icons.person),
-                        border: OutlineInputBorder(),
-                      ),
+                      labelText: 'ชื่อ',
+                      icon: Icons.person,
                     ),
                     SizedBox(height: 16),
-                    TextFormField(
+                    _buildTextField(
                       controller: _userLnameController,
-                      decoration: InputDecoration(
-                        labelText: 'นามสกุล',
-                        prefixIcon: Icon(Icons.person),
-                        border: OutlineInputBorder(),
-                      ),
+                      labelText: 'นามสกุล',
+                      icon: Icons.person,
                     ),
                     SizedBox(height: 16),
-                    TextFormField(
+                    _buildTextField(
                       controller: _userNameController,
-                      decoration: InputDecoration(
-                        labelText: 'ชื่อผู้ใช้',
-                        prefixIcon: Icon(Icons.account_circle),
-                        border: OutlineInputBorder(),
-                      ),
+                      labelText: 'ชื่อผู้ใช้',
+                      icon: Icons.account_circle,
                     ),
                     SizedBox(height: 16),
-                    TextFormField(
+                    _buildTextField(
                       controller: _passwordController,
-                      decoration: InputDecoration(
-                        labelText: 'รหัสผ่าน',
-                        prefixIcon: Icon(Icons.lock),
-                        border: OutlineInputBorder(),
-                      ),
+                      labelText: 'รหัสผ่าน',
+                      icon: Icons.lock,
                       obscureText: true,
                     ),
                     SizedBox(height: 16),
-                    TextFormField(
+                    _buildTextField(
                       controller: _userPhoneController,
-                      decoration: InputDecoration(
-                        labelText: 'เบอร์โทร',
-                        prefixIcon: Icon(Icons.phone),
-                        border: OutlineInputBorder(),
-                      ),
+                      labelText: 'เบอร์โทร',
+                      icon: Icons.phone,
                     ),
                     SizedBox(height: 16),
-                    TextFormField(
+                    _buildTextField(
                       controller: _userEmailController,
-                      decoration: InputDecoration(
-                        labelText: 'อีเมล',
-                        prefixIcon: Icon(Icons.email),
-                        border: OutlineInputBorder(),
-                      ),
+                      labelText: 'อีเมล',
+                      icon: Icons.email,
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: 24),
                     ElevatedButton(
                       onPressed: _submitForm,
                       child: Text(
@@ -184,9 +167,12 @@ class _UserFormScreenState extends State<UserFormScreen> {
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
+                        backgroundColor: Colors.deepPurple,
                         padding:
                             EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                         textStyle: TextStyle(fontSize: 18),
                       ),
                     ),
@@ -197,6 +183,36 @@ class _UserFormScreenState extends State<UserFormScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String labelText,
+    required IconData icon,
+    bool obscureText = false,
+  }) {
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: labelText,
+        prefixIcon: Icon(icon, color: Colors.deepPurple),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+          borderSide: BorderSide(color: Colors.deepPurple),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+          borderSide: BorderSide(color: Colors.deepPurpleAccent),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+          borderSide: BorderSide(color: Colors.deepPurple),
+        ),
+        filled: true,
+        fillColor: Colors.white,
+      ),
+      obscureText: obscureText,
     );
   }
 }

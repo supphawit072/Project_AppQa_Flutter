@@ -19,6 +19,8 @@ class UserController {
       required String role,
       required String userPhone,
       required String userEmail}) async {
+    final adminProvider = Provider.of<AdminProvider>(context, listen: false);
+    var accessToken = adminProvider.accessToken;
     final Map<String, dynamic> userData = {
       'user_prefix': userPrefix,
       'user_Fname': userFname,
@@ -33,7 +35,10 @@ class UserController {
 
     final response = await http.post(
       Uri.parse('$apiURL/api/admin/user/newuser'),
-      headers: {"Content-Type": "application/json"},
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $accessToken", // เพิ่ม Token ใน Header
+      },
       body: jsonEncode(userData),
     );
 
@@ -87,18 +92,27 @@ class UserController {
     }
   }
 
-  Future<UserModel> updateUser(
-      BuildContext context, String userId, UserModel user) async {
+  Future<void> updateUser(BuildContext context, String userId,
+      Map<String, dynamic> userData) async {
+    final adminProvider = Provider.of<AdminProvider>(context, listen: false);
+    var accessToken = adminProvider.accessToken;
+
     final response = await http.put(
-      Uri.parse('$apiURL/api/admin/user/$userId'),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode(user.toJson()),
+      Uri.parse('$apiURL/api/admin/user/$userId'), // Update to user endpoint
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $accessToken", // Include Token in Header
+      },
+      body: jsonEncode(userData), // Send user data
     );
 
     if (response.statusCode == 200) {
-      return UserModel.fromJson(jsonDecode(response.body));
+      // Handle successful update of user
+      print('User updated successfully');
+      print('User ${response.body}');
     } else {
-      throw Exception('ไม่สามารถอัปเดตข้อมูลผู้ใช้ได้');
+      throw Exception(
+          'ไม่สามารถอัปเดตรายผู้ใช้ได้'); // Update the error message
     }
   }
 

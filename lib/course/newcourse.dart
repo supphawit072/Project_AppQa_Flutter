@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:test/controllers/CourseController.dart';
-import 'package:test/models/course_model.dart'; // เปลี่ยนไปยัง model สำหรับหลักสูตร
-// import 'package:test/menu.dart'; // นำเข้า MenuScreen
+import 'package:test/course/index_course.dart';
 
 class CourseFormScreen extends StatefulWidget {
   @override
@@ -16,8 +15,7 @@ class _CourseFormScreenState extends State<CourseFormScreen> {
   final TextEditingController _groupsController = TextEditingController();
   final TextEditingController _acceptingController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  final CourseController _courseController =
-      CourseController(); // ควบคุมหลักสูตร
+  final CourseController _courseController = CourseController();
   String _courseCode = '';
   String _courseName = '';
   int _credits = 0;
@@ -53,6 +51,12 @@ class _CourseFormScreenState extends State<CourseFormScreen> {
           content: Text('วิชาใหม่ถูกสร้างสำเร็จ'),
           backgroundColor: Colors.green,
         ));
+
+        // Navigate back to IndexCourse screen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => IndexCourse()),
+        ); // Or use Navigator.pushReplacement to go to IndexCourse directly
       } catch (e) {
         print('เกิดข้อผิดพลาด: $e');
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -66,16 +70,17 @@ class _CourseFormScreenState extends State<CourseFormScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey,
+      backgroundColor: Colors.deepPurple[50],
       appBar: AppBar(
         title: Text(
-          'Welcome to create newcourse',
+          'Create New Course',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.deepPurpleAccent,
+        backgroundColor: Colors.deepPurple,
+        centerTitle: true,
       ),
       body: Center(
         child: Padding(
@@ -98,106 +103,47 @@ class _CourseFormScreenState extends State<CourseFormScreen> {
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black54,
+                        color: Colors.deepPurple[800],
                       ),
+                      textAlign: TextAlign.center,
                     ),
                     SizedBox(height: 16),
-                    TextFormField(
+                    buildTextFormField(
                       controller: _courseCodeController,
-                      decoration: InputDecoration(
-                        labelText: 'รหัสวิชา',
-                        prefixIcon: Icon(Icons.code),
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'กรุณากรอกรหัสวิชา';
-                        }
-                        return null;
-                      },
+                      label: 'รหัสวิชา',
+                      icon: Icons.code,
                     ),
                     SizedBox(height: 16),
-                    TextFormField(
+                    buildTextFormField(
                       controller: _courseNameController,
-                      decoration: InputDecoration(
-                        labelText: 'ชื่อวิชา',
-                        prefixIcon: Icon(Icons.book),
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'กรุณากรอกชื่อวิชา';
-                        }
-                        return null;
-                      },
+                      label: 'ชื่อวิชา',
+                      icon: Icons.book,
                     ),
                     SizedBox(height: 16),
-                    TextFormField(
+                    buildTextFormField(
                       controller: _creditsController,
-                      decoration: InputDecoration(
-                        labelText: 'หน่วยกิต',
-                        prefixIcon: Icon(Icons.star),
-                        border: OutlineInputBorder(),
-                      ),
-                      keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'กรุณากรอกหน่วยกิต';
-                        }
-                        if (int.tryParse(value) == null) {
-                          return 'กรุณากรอกตัวเลข';
-                        }
-                        return null;
-                      },
+                      label: 'หน่วยกิต',
+                      icon: Icons.star,
+                      isNumber: true,
                     ),
                     SizedBox(height: 16),
-                    TextFormField(
+                    buildTextFormField(
                       controller: _instructorController,
-                      decoration: InputDecoration(
-                        labelText: 'ผู้สอน',
-                        prefixIcon: Icon(Icons.person),
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'กรุณากรอกชื่อผู้สอน';
-                        }
-                        return null;
-                      },
+                      label: 'ผู้สอน',
+                      icon: Icons.person,
                     ),
                     SizedBox(height: 16),
-                    TextFormField(
+                    buildTextFormField(
                       controller: _groupsController,
-                      decoration: InputDecoration(
-                        labelText: 'กลุ่ม',
-                        prefixIcon: Icon(Icons.group),
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'กรุณากรอกกลุ่ม';
-                        }
-                        return null;
-                      },
+                      label: 'กลุ่ม',
+                      icon: Icons.group,
                     ),
                     SizedBox(height: 16),
-                    TextFormField(
+                    buildTextFormField(
                       controller: _acceptingController,
-                      decoration: InputDecoration(
-                        labelText: 'จำนวนรับ',
-                        prefixIcon: Icon(Icons.group_add),
-                        border: OutlineInputBorder(),
-                      ),
-                      keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'กรุณากรอกจำนวนรับ';
-                        }
-                        if (int.tryParse(value) == null) {
-                          return 'กรุณากรอกตัวเลข';
-                        }
-                        return null;
-                      },
+                      label: 'จำนวนรับ',
+                      icon: Icons.group_add,
+                      isNumber: true,
                     ),
                     SizedBox(height: 20),
                     ElevatedButton(
@@ -210,10 +156,13 @@ class _CourseFormScreenState extends State<CourseFormScreen> {
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
+                        backgroundColor: Colors.deepPurple[700],
                         padding:
                             EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                         textStyle: TextStyle(fontSize: 18),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                     ),
                   ],
@@ -223,6 +172,37 @@ class _CourseFormScreenState extends State<CourseFormScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  TextFormField buildTextFormField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+    bool isNumber = false,
+  }) {
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(icon, color: Colors.deepPurple[700]),
+        filled: true,
+        fillColor: Colors.deepPurple[50],
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.0),
+          borderSide: BorderSide.none,
+        ),
+      ),
+      keyboardType: isNumber ? TextInputType.number : TextInputType.text,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'กรุณากรอก$label';
+        }
+        if (isNumber && int.tryParse(value) == null) {
+          return 'กรุณากรอกตัวเลข';
+        }
+        return null;
+      },
     );
   }
 }
