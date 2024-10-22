@@ -174,7 +174,7 @@ class FormController {
     var accessToken = adminProvider.accessToken;
     final response = await http.delete(
       Uri.parse(
-          '$apiURL/api/admin/form/$formId'), // เปลี่ยน URL ให้เป็นการลบฟอร์ม
+          '$apiURL/api/admin/form/de/$formId'), // เปลี่ยน URL ให้เป็นการลบฟอร์ม
       headers: {
         "Authorization": "Bearer $accessToken", // เพิ่ม Token ใน Header
       },
