@@ -68,11 +68,19 @@ class UserController {
   }
 
   Future<UserModel> getUser(BuildContext context, String userId) async {
-    final response =
-        await http.get(Uri.parse('$apiURL/api/admin/user/viewuser$userId'));
-
+    final adminProvider = Provider.of<AdminProvider>(context, listen: false);
+    var accessToken = adminProvider.accessToken;
+    final response = await http.get(
+      Uri.parse('$apiURL/api/admin/user/viewuser/$userId'),
+      headers: {
+        "Authorization": "Bearer $accessToken",
+      },
+    );
+    print(response.statusCode);
     if (response.statusCode == 200) {
-      return UserModel.fromJson(jsonDecode(response.body));
+      return UserModel.fromJson(
+        jsonDecode(response.body),
+      );
     } else {
       throw Exception('ไม่สามารถโหลดข้อมูลผู้ใช้ได้');
     }
@@ -94,13 +102,33 @@ class UserController {
   }
 
   Future<void> deleteUser(BuildContext context, String userId) async {
-    final response =
-        await http.delete(Uri.parse('$apiURL/api/admin/user/$userId'));
+    final adminProvider = Provider.of<AdminProvider>(context, listen: false);
+    var accessToken = adminProvider.accessToken;
+    final response = await http.delete(
+      Uri.parse('$apiURL/api/admin/user/$userId'),
+      headers: {
+        "Authorization": "Bearer $accessToken",
+      },
+    );
 
     if (response.statusCode == 200) {
-      return;
+      // ถ้าลบสำเร็จ ให้แสดงข้อความแจ้งเตือน
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('ลบผู้ใช้เรียบร้อยแล้ว')),
+      );
     } else {
-      throw Exception('ไม่สามารถลบผู้ใช้ได้');
+      // กรณีลบไม่สำเร็จ ให้แสดงสถานะและข้อความที่ได้จากเซิร์ฟเวอร์
+      print('สถานะการตอบกลับจากเซิร์ฟเวอร์: ${response.statusCode}');
+      print('รายละเอียดเพิ่มเติม: ${response.body}');
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'ไม่สามารถลบผู้ใช้ได้: สถานะ ${response.statusCode} - ${response.body}',
+          ),
+        ),
+      );
+      throw Exception('ไม่สามารถลบผู้ใช้ได้: สถานะ ${response.statusCode}');
     }
   }
 }
